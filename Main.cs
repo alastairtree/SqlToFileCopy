@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FluentData;
 
 namespace SqlToFileCopy
 {
@@ -63,14 +64,27 @@ namespace SqlToFileCopy
                 return;
             }
 
+            IDbContext context = new DbContext()
+                .ConnectionString(ConnectionStringTextBox.Text,
+                new SqlServerProvider());
+
+            List<string> files;
+            try
+            {
+                files = context.Sql(QueryTextBox.Text).QueryMany<string>();
+                WriteLog("Completed query, found " + files.Count + " records");
+            }
+            catch (Exception ex)
+            {
+                WriteLog("Executing query failed with error: " + ex);
+            }
 
         }
 
         private void WriteLog(string msg)
         {
-            LogData.Add(new{ Time = DateTime.Now.ToString("dd MMM hh:mm"), Message =  msg});
+            LogData.Add(new{ Time = DateTime.Now.ToString("dd MMM HH:mm"), Message =  msg});
             LogTable.DataSource = LogData;
-
         }
 
         public List<object> LogData
