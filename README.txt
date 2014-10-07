@@ -1,0 +1,47 @@
+SqlToFileCopy
+
+OVERVIEW
+SqlToFileCopy is a simple winforms utility for extracting files that are saved somewhere, 
+but whose path is stored in a sql server database. 
+
+FEATURES
+- Connect to any Sql Sever database, just enter a connection string
+- Execute any query to select the paths of the files
+- Copy the files to anywhere
+- Maintain your complex folder structure
+- Skip missing or already copied files
+- Skip missing files
+- Report progress, useful for 1000s of files
+- Give a summary of the copy at the end in case there were any issues
+
+USES
+Designed for Dev or Ops type people dealing with files organised via a Sql Server (like photos in a blog CMS say)
+
+SAMPLE
+E.g. lets say you have
+A Table in Sql Server like this:
+
+CREATE TABLE dbo.Files (Id int PRIMARY KEY, Path varchar(500))
+INSERT INTO dbo.Files VALUES (1, '\\Server\Folder\File.txt')
+INSERT INTO dbo.Files VALUES (2, '\\Server\Folder\File2.txt')
+INSERT INTO dbo.Files VALUES (3, '\\Server\Folder2\File3.txt')
+
+A folder with files somewhere like this:
+\\Server
+    \Folder
+	    \File.txt
+		\File2.txt
+		\File_I_Dont_Care_About.txt
+    \Folder2
+	    \File3.txt
+
+Then i will allow you to easily query the table and copy the files you want to 
+another folder, and i will even maintain the existing folder structure for you.
+So you destination folder C:\Temp would become
+
+C:\Temp
+    \Folder
+	    \File.txt
+		\File2.txt
+    \Folder2
+	    \File3.txt
