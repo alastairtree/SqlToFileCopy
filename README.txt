@@ -17,6 +17,9 @@ FEATURES
 USES
 Designed for Dev or Ops type people dealing with files organised via a Sql Server (like photos in a blog CMS say)
 
+DOWNLOAD
+Get the latest binaries from https://github.com/alastairtree/SqlToFileCopy/releases or compile from source yourself.
+
 SAMPLE
 E.g. lets say you have
 A Table in Sql Server like this:
