@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -33,32 +34,66 @@ namespace SqlToFileCopy
             });
         }
 
+        public Task StartWithDestinationsInQuery(string connectionString, string query)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                var fileMapping = GetFileMappingFromDatabase(connectionString, query);
+
+                if (fileMapping != null)
+                {
+                    CopyFilesToDestination(fileMapping.ToArray());
+                }
+            });
+        }
+
 
         private async void CopyFilesToDestination(ICollection<string> files, string destination)
         {
             var sucessCount = 0;
             foreach (var originalSourceFilePath in files.Where(x => !String.IsNullOrEmpty(x)))
             {
-                var sourceFilePath = await ProcessForHttpFiles(originalSourceFilePath);
-
-                var destinationFilePath = GenerateDestinationPath(originalSourceFilePath, destination);
-
-                if (String.IsNullOrEmpty(sourceFilePath) || !File.Exists(sourceFilePath))
-                {
-                    logger("Error: Source file missing " + originalSourceFilePath);
-                    continue;
-                }
-
-                if (CopyFile(sourceFilePath, destinationFilePath))
-                    logger(String.Format("File copied from {0} to {1}", originalSourceFilePath, destinationFilePath));
-
-                sucessCount++;
+                if (await ProcessFileCopyRequest(originalSourceFilePath, destination, true))
+                    sucessCount++;
             }
 
             if (sucessCount == files.Count())
                 logger("All files copied sucessfully");
             else
                 logger(String.Format("{0}/{1} files copied sucessfully.", sucessCount, files.Count()));
+        }
+
+        private async void CopyFilesToDestination(ICollection<Tuple<string,string>> filesSourceDestinationMap)
+        {
+            var sucessCount = 0;
+            foreach (var originalSourceFilePath in filesSourceDestinationMap.Where(x => !String.IsNullOrEmpty(x.Item1)))
+            {
+                if (await ProcessFileCopyRequest(originalSourceFilePath.Item1, originalSourceFilePath.Item2))
+                    sucessCount++;
+            }
+
+            if (sucessCount == filesSourceDestinationMap.Count())
+                logger("All files copied sucessfully");
+            else
+                logger(String.Format("{0}/{1} files copied sucessfully.", sucessCount, filesSourceDestinationMap.Count()));
+        }
+
+        private async Task<bool> ProcessFileCopyRequest(string sourcePath, string destinationPath, bool maintainSourceFolders = false)
+        {
+            var sourceFilePath = await ProcessForHttpFiles(sourcePath);
+
+            var destinationFilePath = maintainSourceFolders ? GenerateDestinationPath(sourcePath, destinationPath) : destinationPath;
+
+            if (String.IsNullOrEmpty(sourceFilePath) || !File.Exists(sourceFilePath))
+            {
+                logger("Error: Source file missing " + sourcePath);
+                return false;
+            }
+
+            if (ExecuteFileCopy(sourceFilePath, destinationFilePath))
+                logger(String.Format("File copied from {0} to {1}", sourcePath, destinationFilePath));
+
+            return true;
         }
 
         private async Task<string> ProcessForHttpFiles(string sourceFilePath)
@@ -91,7 +126,7 @@ namespace SqlToFileCopy
             }
         }
 
-        private bool CopyFile(string sourceFilePath, string destinationFilePath)
+        private bool ExecuteFileCopy(string sourceFilePath, string destinationFilePath)
         {
             if (File.Exists(destinationFilePath)
                 && File.GetLastWriteTimeUtc(destinationFilePath) == File.GetLastWriteTimeUtc(destinationFilePath)
@@ -155,6 +190,41 @@ namespace SqlToFileCopy
                 logger("Executing query failed with error: " + ex);
             }
             return files;
+        }
+
+        private IEnumerable<Tuple<string,string>> GetFileMappingFromDatabase(string connectionString, string query)
+        {
+            var context = new DbContext()
+                .ConnectionString(connectionString, new SqlServerProvider())
+                .CommandTimeout(300);
+
+            IEnumerable<Tuple<string, string>> items = null;
+            try
+            {
+                var table = context.Sql(query).QuerySingle<DataTable>();
+                logger("Completed query, found " + table.Rows.Count + " records");
+                items = ExtractSourceDestinationFromDataTable(table);
+            }
+            catch (Exception ex)
+            {
+                logger("Executing query failed with error: " + ex);
+            }
+            return items;
+        }
+
+        private IEnumerable<Tuple<string, string>> ExtractSourceDestinationFromDataTable(DataTable table)
+        {
+            if (table.Columns.Count < 2)
+            {
+                logger("Need 2 columns, source and destination, to use alternative destination");
+                return null;
+            }
+
+            var items = new Tuple<string, string>[table.Rows.Count];
+            for (var i = 0; i < table.Rows.Count; i++)
+                items[i] = Tuple.Create(table.Rows[i][0].ToString(), table.Rows[i][1].ToString());
+
+            return items;
         }
     }
 }

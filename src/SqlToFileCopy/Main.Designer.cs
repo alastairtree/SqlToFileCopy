@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.LogTable = new System.Windows.Forms.DataGridView();
+            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ConnectionStringTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -40,8 +42,8 @@
             this.BrowseButton = new System.Windows.Forms.Button();
             this.CopyFilesButton = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
-            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label6 = new System.Windows.Forms.Label();
+            this.AlternativeDestinationCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.LogTable)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -57,19 +59,35 @@
             this.Message});
             this.tableLayoutPanel1.SetColumnSpan(this.LogTable, 2);
             this.LogTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LogTable.Location = new System.Drawing.Point(155, 403);
+            this.LogTable.Location = new System.Drawing.Point(154, 403);
             this.LogTable.Name = "LogTable";
             this.LogTable.ReadOnly = true;
-            this.LogTable.Size = new System.Drawing.Size(684, 155);
+            this.LogTable.Size = new System.Drawing.Size(685, 155);
             this.LogTable.TabIndex = 10;
+            // 
+            // Time
+            // 
+            this.Time.DataPropertyName = "Time";
+            this.Time.HeaderText = "Time";
+            this.Time.Name = "Time";
+            this.Time.ReadOnly = true;
+            this.Time.Width = 55;
+            // 
+            // Message
+            // 
+            this.Message.DataPropertyName = "Message";
+            this.Message.HeaderText = "Message";
+            this.Message.Name = "Message";
+            this.Message.ReadOnly = true;
+            this.Message.Width = 75;
             // 
             // ConnectionStringTextBox
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.ConnectionStringTextBox, 2);
             this.ConnectionStringTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ConnectionStringTextBox.Location = new System.Drawing.Point(155, 33);
+            this.ConnectionStringTextBox.Location = new System.Drawing.Point(154, 33);
             this.ConnectionStringTextBox.Name = "ConnectionStringTextBox";
-            this.ConnectionStringTextBox.Size = new System.Drawing.Size(684, 20);
+            this.ConnectionStringTextBox.Size = new System.Drawing.Size(685, 20);
             this.ConnectionStringTextBox.TabIndex = 0;
             // 
             // label1
@@ -97,7 +115,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.3629F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 79.6371F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 94F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 96F));
             this.tableLayoutPanel1.Controls.Add(this.ConnectionStringTextBox, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 1);
@@ -109,6 +127,8 @@
             this.tableLayoutPanel1.Controls.Add(this.CopyFilesButton, 2, 4);
             this.tableLayoutPanel1.Controls.Add(this.label5, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.LogTable, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.label6, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.AlternativeDestinationCheckbox, 1, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -139,11 +159,11 @@
             this.tableLayoutPanel1.SetColumnSpan(this.QueryTextBox, 2);
             this.QueryTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.QueryTextBox.HideSelection = false;
-            this.QueryTextBox.Location = new System.Drawing.Point(155, 64);
+            this.QueryTextBox.Location = new System.Drawing.Point(154, 64);
             this.QueryTextBox.Multiline = true;
             this.QueryTextBox.Name = "QueryTextBox";
             this.QueryTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.QueryTextBox.Size = new System.Drawing.Size(684, 269);
+            this.QueryTextBox.Size = new System.Drawing.Size(685, 269);
             this.QueryTextBox.TabIndex = 3;
             this.QueryTextBox.Text = "SELECT FilePath FROM [dbo].[FilesTable]";
             // 
@@ -159,14 +179,14 @@
             // DestinationFolderTextBox
             // 
             this.DestinationFolderTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DestinationFolderTextBox.Location = new System.Drawing.Point(155, 339);
+            this.DestinationFolderTextBox.Location = new System.Drawing.Point(154, 339);
             this.DestinationFolderTextBox.Name = "DestinationFolderTextBox";
-            this.DestinationFolderTextBox.Size = new System.Drawing.Size(589, 20);
+            this.DestinationFolderTextBox.Size = new System.Drawing.Size(588, 20);
             this.DestinationFolderTextBox.TabIndex = 6;
             // 
             // BrowseButton
             // 
-            this.BrowseButton.Location = new System.Drawing.Point(750, 339);
+            this.BrowseButton.Location = new System.Drawing.Point(748, 339);
             this.BrowseButton.Name = "BrowseButton";
             this.BrowseButton.Size = new System.Drawing.Size(84, 26);
             this.BrowseButton.TabIndex = 7;
@@ -177,7 +197,7 @@
             // CopyFilesButton
             // 
             this.CopyFilesButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.CopyFilesButton.Location = new System.Drawing.Point(750, 371);
+            this.CopyFilesButton.Location = new System.Drawing.Point(748, 371);
             this.CopyFilesButton.Name = "CopyFilesButton";
             this.CopyFilesButton.Size = new System.Drawing.Size(84, 26);
             this.CopyFilesButton.TabIndex = 8;
@@ -194,21 +214,25 @@
             this.label5.TabIndex = 9;
             this.label5.Text = "Copy log";
             // 
-            // Time
+            // label6
             // 
-            this.Time.DataPropertyName = "Time";
-            this.Time.HeaderText = "Time";
-            this.Time.Name = "Time";
-            this.Time.ReadOnly = true;
-            this.Time.Width = 55;
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(3, 368);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(111, 13);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "Alternative destination";
             // 
-            // Message
+            // AlternativeDestinationCheckbox
             // 
-            this.Message.DataPropertyName = "Message";
-            this.Message.HeaderText = "Message";
-            this.Message.Name = "Message";
-            this.Message.ReadOnly = true;
-            this.Message.Width = 75;
+            this.AlternativeDestinationCheckbox.AutoSize = true;
+            this.AlternativeDestinationCheckbox.Location = new System.Drawing.Point(154, 371);
+            this.AlternativeDestinationCheckbox.Name = "AlternativeDestinationCheckbox";
+            this.AlternativeDestinationCheckbox.Size = new System.Drawing.Size(297, 17);
+            this.AlternativeDestinationCheckbox.TabIndex = 12;
+            this.AlternativeDestinationCheckbox.Text = "Use second column in query as copy destination instead?";
+            this.AlternativeDestinationCheckbox.UseVisualStyleBackColor = true;
+            this.AlternativeDestinationCheckbox.CheckedChanged += new System.EventHandler(this.AlternativeDestinationCheckbox_CheckedChanged);
             // 
             // Main
             // 
@@ -241,6 +265,8 @@
         private System.Windows.Forms.DataGridView LogTable;
         private System.Windows.Forms.DataGridViewTextBoxColumn Time;
         private System.Windows.Forms.DataGridViewTextBoxColumn Message;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox AlternativeDestinationCheckbox;
     }
 }
 
