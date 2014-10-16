@@ -7,8 +7,8 @@ but whose path is stored in a sql server database.
 FEATURES
 - Connect to any Sql Sever database, just enter a connection string
 - Execute any query to select the paths of the files
-- Copy the files to anywhere
-- Maintain your complex folder structure
+- Copy the files from local drives, UNC shares or HTTP resources to any local/UNC file share
+- Maintain the folder structure or the copied files
 - Skip missing or already copied files
 - Skip missing files
 - Report progress, useful for 1000s of files
