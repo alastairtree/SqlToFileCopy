@@ -118,7 +118,7 @@ namespace SqlToFileCopy
                         var tmp = Path.GetTempFileName();
                         File.WriteAllBytes(tmp, x.Result);
                         return tmp;
-                    });
+                    }, TaskContinuationOptions.NotOnCanceled);
             }
             catch (Exception ex)
             {
