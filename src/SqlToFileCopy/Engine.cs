@@ -15,10 +15,12 @@ namespace SqlToFileCopy
         private const string WebBasedFilePathMatcher = @"^(https?://)|(www\.)";
 
         private readonly Action<string> logger;
+        private readonly Lazy<HttpClient> client;
 
         public Engine(Action<string> logger)
         {
             this.logger = logger;
+            client = new Lazy<HttpClient>(() => new HttpClient());
         }
 
         public Task Start(string connectionString, string query, string destinationPath)
@@ -108,10 +110,9 @@ namespace SqlToFileCopy
 
         private async Task<string> DownloadWebFile(string sourceFilePath)
         {
-            var client = new HttpClient();
             try
             {
-                return await client.GetByteArrayAsync(sourceFilePath)
+                return await client.Value.GetByteArrayAsync(sourceFilePath)
                     .ContinueWith(x =>
                     {
                         var tmp = Path.GetTempFileName();
