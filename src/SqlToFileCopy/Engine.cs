@@ -95,6 +95,10 @@ namespace SqlToFileCopy
             if (ExecuteFileCopy(sourceFilePath, destinationFilePath))
                 logger(String.Format("File copied from {0} to {1}", sourcePath, destinationFilePath));
 
+            //clean up if we used a temp file
+            if(sourceFilePath != sourcePath && sourceFilePath.Contains(Path.GetTempPath()) && File.Exists(sourceFilePath))
+                File.Delete(sourceFilePath);
+
             return true;
         }
 
