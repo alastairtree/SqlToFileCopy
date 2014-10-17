@@ -168,12 +168,16 @@ namespace SqlToFileCopy
 
         private static void CreateMissingFolders(string file)
         {
+            int depth = 0;
+            bool isUnc = new Uri(file).IsUnc;
             for (var i = 3; i < file.Length; i++)
             {
                 if (file[i] == '\\')
                 {
+                    depth++;
                     var folder = file.Substring(0, i + 1);
-                    if (!Directory.Exists(folder))
+
+                    if (!Directory.Exists(folder) && (depth > 1|| !isUnc))
                         Directory.CreateDirectory(folder);
                 }
             }
